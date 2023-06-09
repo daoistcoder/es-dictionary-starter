@@ -54,6 +54,21 @@ class WordController extends Controller
         return response()->json($response);
     }
 
+    public function random()
+    {
+        $word = Word::inRandomOrder()->first();
+
+        return response()->json(['word' => $word], 200);
+    }
+
+    public function random3()
+    {
+        $words = Word::inRandomOrder()->take(3)->get();
+
+        return response()->json(['words' => $words], 200);
+    }
+
+
     // public function check(CheckRequest $request)
     // {   
     //     // Validates the request
