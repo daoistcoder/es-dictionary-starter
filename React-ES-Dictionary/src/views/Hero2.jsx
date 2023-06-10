@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axiosClient from "../axios-client.js";
 import debounce from "lodash/debounce";
+import Loading from "./Loading.jsx";
 
 export default function Hero() {
   const [word, setRandomWord] = useState("");
   const [dictionaryData, setDictionaryData] = useState(null);
-  const [imageData, setImageData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -27,29 +27,41 @@ export default function Hero() {
       }
 
       const {
-        word: searchWord,
+        word: word,
         image_url,
         part_of_speech,
         definition,
         pronunciation,
       } = data.word;
 
-      setRandomWord(searchWord);
+      setRandomWord(word);
 
       setDictionaryData({
+        word,
         part_of_speech,
         image_url,
         definition,
         pronunciation,
       });
-
-      setImageData(image_url);
     } catch (error) {
       console.error("Error:", error);
     }
     setIsLoading(false);
   };
 
+  const renderImage = () => {
+    if (!dictionaryData) return null;
+    const { image_url, word, pronunciation, part_of_speech } = dictionaryData;
+
+    return (
+      <img
+        src={image_url}
+        alt={`${word} is a ${part_of_speech}, pronounced as '${pronunciation}' `}
+        className="w-full rounded object-cover"
+        style={{ maxHeight: "200px", minHeight: "200px" }}
+      />
+    );
+  };
   const renderDefinitions = () => {
     if (!dictionaryData) return null;
 
@@ -91,34 +103,26 @@ export default function Hero() {
             </Link>
           </div>
         </div>
-        <div className="container mx-auto px-4 mt-8 sm:mt-16">
-          <h2 className="max-w-full mx-auto text-3xl font-bold text-gray-800 mb-4">
+        <div className="container mx-auto px-4 mt-8">
+          <h2 className="max-w-md mx-auto text-3xl font-bold text-gray-800 mb-4">
             Featured Word
           </h2>
           {isLoading ? (
-            <div className="max-w-full mx-auto bg-coffeeMate rounded-lg border-4 border-solid border-coffeeBrown shadow-coffeeDark shadow-sm p-4">
-              <h1 className="text-3xl font-bold m-auto flex justify-center">
-                Loading...
+            <div className="max-w-md mx-auto bg-coffeeMate rounded-lg border-4 border-solid border-coffeeBrown shadow-coffeeDark shadow-sm p-4">
+              <h1 className="font-bold m-auto flex justify-center">
+                <Loading className="text-sm"/>
               </h1>
             </div>
           ) : (
-            <div className="max-w-full mx-auto bg-coffeeMate rounded-lg shadow-coffeeDark shadow-sm p-4 border-4 border-solid border-coffeeBrown text-left">
-              <h1 className="text-3xl text-coffeeDark font-bold italic mb-6">
+            <div className="max-w-md mx-auto bg-coffeeMate rounded-lg shadow-coffeeDark shadow-sm p-4 border-4 border-solid border-coffeeBrown">
+              <h1 className="text-3xl text-coffeeDark font-bold italic mb-4">
                 {word}
               </h1>
+              <div className="mb-4">{renderImage()}</div>
               <div
-                className="w-full h-0 relative"
-                style={{ paddingBottom: "75%" }}
+                className="flex flex-col"
+                style={{ maxHeight: "140px", minHeight: "140px" }}
               >
-                {imageData && (
-                  <img
-                    src={imageData}
-                    alt={word}
-                    className="absolute inset-0 w-full h-full object-cover rounded"
-                  />
-                )}
-              </div>
-              <div className="flex flex-col h-140 mt-2">
                 <div className="flex-1 overflow-y-auto">
                   {renderDefinitions()}
                 </div>
