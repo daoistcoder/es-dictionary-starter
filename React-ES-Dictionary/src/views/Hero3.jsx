@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Draggable from "react-draggable";
+// import Draggable from "react-draggable";
 import axiosClient from "../axios-client.js";
 import debounce from "lodash/debounce";
 
@@ -60,7 +60,7 @@ export default function Hero3() {
     return (
       <div className="flex space-x-4">
         {words.map((wordData, index) => (
-          <Draggable key={index}>
+          // <Draggable key={index}>
             <div className="max-w-md mx-auto bg-coffeeMate rounded-lg shadow-coffeeDark shadow-sm p-4 border-4 border-solid border-coffeeBrown">
               <h1 className="text-3xl text-coffeeDark font-bold italic mb-4">
                 {wordData.word}
@@ -71,20 +71,20 @@ export default function Hero3() {
                     src={wordData.dictionaryData.image_url}
                     alt={wordData.word}
                     className="w-full rounded object-cover"
-                    style={{ maxHeight: "200px", minHeight: "200px" }}
+                    style={{ maxHeight: "150px", minHeight: "150px", width: "300px" }}
                   />
                 )}
               </div>
               <div
                 className="flex flex-col"
-                style={{ maxHeight: "140px", minHeight: "140px" }}
+                style={{ maxHeight: "150px", minHeight: "150px", width: "300px" }}
               >
                 <div className="flex-1 overflow-y-auto">
                   {renderDefinitions(wordData.dictionaryData)}
                 </div>
               </div>
             </div>
-          </Draggable>
+          // </Draggable>
         ))}
       </div>
     );
